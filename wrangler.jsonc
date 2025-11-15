@@ -7,4 +7,30 @@
   "vars": {
     "MY_VAR": "Hello from Cloudflare",
   },
+  "env": {
+    "stage": {
+      "name": "tanstack-start-app-stage",
+      "routes": [
+          {
+            "custom_domain": true,
+            "pattern": "stage.tkow.net"
+          }
+      ],
+      "vars": {
+        "MY_VAR": "Hello from Cloudflare Stage",
+      },
+    },
+    "prod": {
+      "name": "tanstack-start-app-prod",
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "tkow.net"
+        }
+      ],
+      "vars": {
+        "MY_VAR": "Hello from Cloudflare Prod",
+      },
+    },
+  },
 }

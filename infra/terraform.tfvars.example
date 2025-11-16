@@ -1,0 +1,21 @@
+# Copy this file to terraform.tfvars and fill in your values
+# terraform.tfvars is ignored by git for security
+
+# Get your Zone ID from Cloudflare Dashboard > Your Domain > Overview > API > Zone ID
+zone_id = "your-zone-id-here"
+
+# Get your Account ID from Cloudflare Dashboard > Right sidebar > Account ID
+account_id = "your-account-id-here"
+
+# List of email addresses allowed to access the stage environment
+allowed_emails = [
+  "user1@example.com",
+  "user2@example.com",
+]
+
+# Optional: Customize application name
+# application_name = "Stage Environment Access"
+
+# Optional: Customize session duration (default: 24h)
+# session_duration = "24h"
+

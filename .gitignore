@@ -12,3 +12,11 @@ count.txt
 .output
 .vinxi
 todos.json
+
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/*.tfvars
+infra/.terraform.tfstate.lock.info

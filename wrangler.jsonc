@@ -2,8 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "tanstack-start-app",
   "compatibility_date": "2025-09-02",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "main": "./src/server.ts",
+  "workers_dev": true,
   "vars": {
     "MY_VAR": "Hello from Cloudflare",
   },
@@ -11,10 +14,10 @@
     "stage": {
       "name": "tanstack-start-app-stage",
       "routes": [
-          {
-            "custom_domain": true,
-            "pattern": "stage.tkow.net"
-          }
+        {
+          "custom_domain": true,
+          "pattern": "stage.tkow.net"
+        }
       ],
       "vars": {
         "MY_VAR": "Hello from Cloudflare Stage",

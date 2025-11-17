@@ -22,7 +22,7 @@ resource "cloudflare_zero_trust_access_policy" "stage_domain_email" {
 resource "cloudflare_zero_trust_access_application" "stage_domain" {
   account_id       = var.account_id
   name             = "${var.application_name} - Domain"
-  domain           = "stage.tkow.net"
+  domain           = var.stage_domain
   type             = "self_hosted"
   session_duration = var.session_duration
   allowed_idps = [cloudflare_zero_trust_access_identity_provider.email_otp.id]
@@ -48,7 +48,7 @@ resource "cloudflare_zero_trust_access_policy" "stage_worker_email" {
 resource "cloudflare_zero_trust_access_application" "stage_worker" {
   account_id       = var.account_id
   name             = "${var.application_name} - Worker"
-  domain           = "tanstack-start-app-stage.auditmos.workers.dev"
+  domain           = var.stage_worker_domain
   type             = "self_hosted"
   session_duration = var.session_duration
   allowed_idps = [cloudflare_zero_trust_access_identity_provider.email_otp.id]

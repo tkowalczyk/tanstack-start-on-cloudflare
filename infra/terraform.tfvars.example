@@ -1,6 +1,3 @@
-# Copy this file to terraform.tfvars and fill in your values
-# terraform.tfvars is ignored by git for security
-
 # Get your Zone ID from Cloudflare Dashboard > Your Domain > Overview > API > Zone ID
 zone_id = "your-zone-id-here"
 
@@ -13,9 +10,14 @@ allowed_emails = [
   "user2@example.com",
 ]
 
+# Your custom domain
+stage_domain = ""
+
+# Your worker.dev subdomain
+stage_worker_domain = ""
+
 # Optional: Customize application name
 # application_name = "Stage Environment Access"
 
 # Optional: Customize session duration (default: 24h)
 # session_duration = "24h"
-

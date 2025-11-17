@@ -27,3 +27,15 @@ variable "session_duration" {
   type        = string
   default     = "24h"
 }
+
+variable "stage_domain" {
+  description = "Stage domain for the application"
+  type        = string
+  default     = "stage.tkow.net"
+}
+
+variable "stage_worker_domain" {
+  description = "Stage worker domain for the application"
+  type        = string
+  default     = "tanstack-start-app-stage.auditmos.workers.dev"
+}

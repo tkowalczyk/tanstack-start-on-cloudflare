@@ -20,3 +20,7 @@ infra/terraform.tfstate
 infra/terraform.tfstate.backup
 infra/*.tfvars
 infra/.terraform.tfstate.lock.info
+
+# private notes
+
+.notes/*

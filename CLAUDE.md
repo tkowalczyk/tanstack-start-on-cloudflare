@@ -6,12 +6,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Development
 - `pnpm dev` - Start development server on port 3000
-- `pnpm build` - Build for production
+- `pnpm build:stage` - Build for staging environment
+- `pnpm build:prod` - Build for production environment
 - `pnpm serve` - Preview production build
 - `pnpm test` - Run tests with Vitest
 
+### Deployment
+- `pnpm deploy:stage` - Build and deploy to Cloudflare Workers (stage environment)
+- `pnpm deploy:prod` - Build and deploy to Cloudflare Workers (production environment)
+- `pnpm cf-typegen` - Generate TypeScript types for Cloudflare environment variables
+
 ### Shadcn Components
 - `pnpx shadcn@latest add <component>` - Add new Shadcn components (use latest version)
+
+### Infrastructure (Terraform)
+- `cd infra && terraform init` - Initialize Terraform
+- `cd infra && terraform plan` - Preview infrastructure changes
+- `cd infra && terraform apply` - Apply infrastructure changes (requires terraform.tfvars with credentials)
 
 ## Architecture
 
@@ -45,9 +56,50 @@ This is a TanStack Start application - a type-safe, client-first, full-stack Rea
 
 **TypeScript**: Strict mode with additional linting rules (`noUnusedLocals`, `noUnusedParameters`, etc.). Uses modern ESNext module resolution.
 
+### Cloudflare Integration
+
+**Multi-Environment Setup**: The project supports two deployment environments (stage and prod) configured in `wrangler.jsonc`:
+- **Stage**: `stage.tkow.net` - Protected by Cloudflare Access
+- **Production**: `tkow.net`
+- Each environment has separate worker names and environment variables
+
+**Custom Server Entry** (`src/server.ts`): Implements a routing layer that distinguishes between:
+- `/worker/*` endpoints - Direct Cloudflare Worker handlers that bypass TanStack Start (see `src/core/worker/handlers.ts`)
+- `/_server/*` endpoints - TanStack Start server functions
+- All other routes - TanStack Start SSR + static assets
+
+**Worker Endpoints**: Direct Cloudflare Worker endpoints in `src/core/worker/handlers.ts`:
+- `/worker/health` - Health check with environment info and geolocation
+- `/worker/echo` - Echo endpoint for testing (POST only)
+- These bypass TanStack Start for maximum performance
+
+**Server Functions Pattern**: TanStack Start server functions use a composable middleware pattern:
+1. Create middleware with `createMiddleware()` in `src/core/middleware/`
+2. Define base function with middleware chain using `createServerFn().middleware([])`
+3. Add Zod input validation with `.inputValidator()`
+4. Implement handler with access to validated data, middleware context, and Cloudflare env
+5. Example: `src/core/functions/example-functions.ts`
+
+**Cloudflare Environment Variables**:
+- Access via `import { env } from "cloudflare:workers"`
+- Type-safe with generated types (run `pnpm cf-typegen`)
+- Configured per environment in `wrangler.jsonc`
+
+### Infrastructure & Security
+
+**Terraform Setup** (`infra/`): Manages Cloudflare Access protection for the stage environment:
+- `access.tf` - Configures Zero Trust Access with email OTP authentication
+- Protects both custom domain (`stage.tkow.net`) and workers.dev subdomain
+- Email allowlist managed via `allowed_emails` variable in `terraform.tfvars`
+- `main.tf` - Provider configuration using API token from tfvars
+- `variables.tf` - Configuration variables (zone_id, account_id, allowed_emails, etc.)
+
+**Important**: Production environment has no Access protection by design.
+
 ### Development Notes
 - Demo files (prefixed with `demo`) can be safely deleted
 - The project uses pnpm as the package manager
 - Devtools are included for both Router and Query in development
 - Routes support loaders, error boundaries, and not-found components
 - File-based routing automatically generates type-safe route definitions
+- Theme support with light/dark modes via ThemeProvider in `__root.tsx`

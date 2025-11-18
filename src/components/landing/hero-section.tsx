@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Github } from "lucide-react"
+import { Link } from "@tanstack/react-router"
+import { ArrowRight, Github, Zap } from "lucide-react"
 
 export function HeroSection() {
   return (
@@ -27,6 +28,13 @@ export function HeroSection() {
           <Button size="lg" className="group">
             Get Started
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Button>
+          
+          <Button variant="outline" size="lg" asChild>
+            <Link to="/demo-worker" className="inline-flex items-center">
+              <Zap className="mr-2 h-4 w-4" />
+              Worker Demo
+            </Link>
           </Button>
           
           <Button variant="outline" size="lg" asChild>

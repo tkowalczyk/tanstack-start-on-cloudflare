@@ -8,7 +8,7 @@ import {
   Palette, 
   Code,
   Server,
-  Layers
+  Layers,
 } from "lucide-react"
 
 const features = [

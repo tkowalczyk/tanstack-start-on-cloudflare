@@ -54,6 +54,12 @@ This is a TanStack Start application - a type-safe, client-first, full-stack Rea
 
 **Styling**: Uses Tailwind CSS v4 with the Vite plugin. Shadcn components are configured with "new-york" style, Zinc base color, and CSS variables enabled.
 
+#### Adding new shadcn component
+
+`pnpx shadcn@latest add <component>`
+
+This will automatically install the component with the correct configuration into src/components/ui/.
+
 **TypeScript**: Strict mode with additional linting rules (`noUnusedLocals`, `noUnusedParameters`, etc.). Uses modern ESNext module resolution.
 
 ### Cloudflare Integration
@@ -103,3 +109,4 @@ This is a TanStack Start application - a type-safe, client-first, full-stack Rea
 - Routes support loaders, error boundaries, and not-found components
 - File-based routing automatically generates type-safe route definitions
 - Theme support with light/dark modes via ThemeProvider in `__root.tsx`
+- add to memory Adding New Components

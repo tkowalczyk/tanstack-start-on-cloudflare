@@ -39,3 +39,10 @@ variable "stage_worker_domain" {
   type        = string
   default     = "tanstack-start-app-stage.auditmos.workers.dev"
 }
+
+variable "cloudflare_api_token" {
+  description = "Cloudflare API Token (recommended)"
+  type        = string
+  sensitive   = true
+  default     = null
+}

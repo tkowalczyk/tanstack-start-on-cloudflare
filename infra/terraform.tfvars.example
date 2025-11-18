@@ -1,3 +1,7 @@
+# Cloudflare API credentials (optional - if not set, will use environment variables)
+# Recommended: Use API Token
+cloudflare_api_token = "your-api-token-here"
+
 # Get your Zone ID from Cloudflare Dashboard > Your Domain > Overview > API > Zone ID
 zone_id = "your-zone-id-here"
 

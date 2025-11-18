@@ -9,9 +9,6 @@ terraform {
   }
 }
 
-provider "cloudflare" {
-  # Authentication via environment variables:
-  # CLOUDFLARE_API_TOKEN (recommended)
-  # OR
-  # CLOUDFLARE_API_KEY and CLOUDFLARE_EMAIL (legacy)
+provider "cloudflare" { 
+  api_token = var.cloudflare_api_token
 }

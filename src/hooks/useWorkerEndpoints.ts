@@ -1,11 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-/**
- * Custom hook for worker endpoint mutations
- * Handles health check and echo endpoint calls
- */
 export function useWorkerEndpoints() {
-  // Health check mutation
+  // Worker Health check mutation (direct bypass)
   const healthMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch('/worker/health');
@@ -14,16 +10,11 @@ export function useWorkerEndpoints() {
     },
     onMutate: () => {
       echoMutation.reset();
-    },
-    onSuccess: (data) => {
-      console.log('[Client] Health check success:', data);
-    },
-    onError: (error) => {
-      console.error('[Client] Health check error:', error);
+      apiStatusMutation.reset();
     },
   });
 
-  // Echo mutation
+  // Worker Echo mutation (direct bypass)
   const echoMutation = useMutation({
     mutationFn: async (message: string) => {
       const response = await fetch('/worker/echo', {
@@ -35,25 +26,50 @@ export function useWorkerEndpoints() {
     },
     onMutate: () => {
       healthMutation.reset();
-    },
-    onSuccess: (data) => {
-      console.log('[Client] Echo success:', data);
-    },
-    onError: (error) => {
-      console.error('[Client] Echo error:', error);
+      apiStatusMutation.reset();
     },
   });
 
-  // Combined state
-  const result = healthMutation.data || echoMutation.data;
-  const error = healthMutation.error || echoMutation.error;
-  const isPending = healthMutation.isPending || echoMutation.isPending;
+  // API Status mutation (through TanStack Start)
+  const apiStatusMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/status');
+      if (!response.ok) throw new Error('API status check failed');
+      return response.json();
+    },
+    onMutate: () => {
+      healthMutation.reset();
+      echoMutation.reset();
+    },
+  });
+
+  // Combined state for worker endpoints
+  const workerResult = healthMutation.data || echoMutation.data;
+  const workerError = healthMutation.error || echoMutation.error;
+  const workerPending = healthMutation.isPending || echoMutation.isPending;
+
+  // API endpoint state
+  const apiResult = apiStatusMutation.data;
+  const apiError = apiStatusMutation.error;
+  const apiPending = apiStatusMutation.isPending;
 
   return {
+    // Worker endpoints (direct bypass)
     healthMutation,
     echoMutation,
-    result,
-    error,
-    isPending,
+    workerResult,
+    workerError,
+    workerPending,
+
+    // API endpoints (TanStack Start)
+    apiStatusMutation,
+    apiResult,
+    apiError,
+    apiPending,
+
+    // Legacy combined state (backward compatible)
+    result: workerResult,
+    error: workerError,
+    isPending: workerPending,
   };
 }

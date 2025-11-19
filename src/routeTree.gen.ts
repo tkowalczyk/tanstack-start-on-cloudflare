@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DemoWorkerRouteImport } from './routes/demo-worker'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkerHealthRouteImport } from './routes/worker/health'
+import { Route as WorkerEchoRouteImport } from './routes/worker/echo'
+import { Route as ApiStatusRouteImport } from './routes/api/status'
 
 const DemoWorkerRoute = DemoWorkerRouteImport.update({
   id: '/demo-worker',
@@ -22,31 +25,69 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkerHealthRoute = WorkerHealthRouteImport.update({
+  id: '/worker/health',
+  path: '/worker/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkerEchoRoute = WorkerEchoRouteImport.update({
+  id: '/worker/echo',
+  path: '/worker/echo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStatusRoute = ApiStatusRouteImport.update({
+  id: '/api/status',
+  path: '/api/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/demo-worker': typeof DemoWorkerRoute
+  '/api/status': typeof ApiStatusRoute
+  '/worker/echo': typeof WorkerEchoRoute
+  '/worker/health': typeof WorkerHealthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo-worker': typeof DemoWorkerRoute
+  '/api/status': typeof ApiStatusRoute
+  '/worker/echo': typeof WorkerEchoRoute
+  '/worker/health': typeof WorkerHealthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/demo-worker': typeof DemoWorkerRoute
+  '/api/status': typeof ApiStatusRoute
+  '/worker/echo': typeof WorkerEchoRoute
+  '/worker/health': typeof WorkerHealthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/demo-worker'
+  fullPaths:
+    | '/'
+    | '/demo-worker'
+    | '/api/status'
+    | '/worker/echo'
+    | '/worker/health'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/demo-worker'
-  id: '__root__' | '/' | '/demo-worker'
+  to: '/' | '/demo-worker' | '/api/status' | '/worker/echo' | '/worker/health'
+  id:
+    | '__root__'
+    | '/'
+    | '/demo-worker'
+    | '/api/status'
+    | '/worker/echo'
+    | '/worker/health'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DemoWorkerRoute: typeof DemoWorkerRoute
+  ApiStatusRoute: typeof ApiStatusRoute
+  WorkerEchoRoute: typeof WorkerEchoRoute
+  WorkerHealthRoute: typeof WorkerHealthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +106,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/worker/health': {
+      id: '/worker/health'
+      path: '/worker/health'
+      fullPath: '/worker/health'
+      preLoaderRoute: typeof WorkerHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/worker/echo': {
+      id: '/worker/echo'
+      path: '/worker/echo'
+      fullPath: '/worker/echo'
+      preLoaderRoute: typeof WorkerEchoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/status': {
+      id: '/api/status'
+      path: '/api/status'
+      fullPath: '/api/status'
+      preLoaderRoute: typeof ApiStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DemoWorkerRoute: DemoWorkerRoute,
+  ApiStatusRoute: ApiStatusRoute,
+  WorkerEchoRoute: WorkerEchoRoute,
+  WorkerHealthRoute: WorkerHealthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -69,15 +69,32 @@ This will automatically install the component with the correct configuration int
 - **Production**: `tkow.net`
 - Each environment has separate worker names and environment variables
 
-**Custom Server Entry** (`src/server.ts`): Implements a routing layer that distinguishes between:
-- `/worker/*` endpoints - Direct Cloudflare Worker handlers that bypass TanStack Start (see `src/core/worker/handlers.ts`)
+**Custom Server Entry** (`src/server.ts`): Implements a hybrid routing strategy:
+- `/worker/*` endpoints - Direct handler bypass (see `src/core/worker/direct-handler.ts`)
 - `/_server/*` endpoints - TanStack Start server functions
+- `/api/*` endpoints - TanStack Start server routes (full framework routing)
 - All other routes - TanStack Start SSR + static assets
 
-**Worker Endpoints**: Direct Cloudflare Worker endpoints in `src/core/worker/handlers.ts`:
-- `/worker/health` - Health check with environment info and geolocation
+**Direct Handler System** (`src/core/worker/direct-handler.ts`): Bypasses TanStack Start for maximum performance:
+- **Auto-discovers** handlers from route files in `src/routes/worker/`
+- **No manual routing** - Imports route definitions directly
+- **True bypass** - Skips TanStack Start's routing layer entirely
+- **Performance** - Eliminates framework overhead for `/worker/*` routes
+- Routes are defined using standard `createFileRoute()` pattern
+- To add new routes: Create route file + add to `workerRoutes` array
+
+**Worker Routes** (`src/routes/worker/`): High-performance API endpoints with direct bypass:
+- `/worker/health` - Health check with environment info and geolocation (GET)
 - `/worker/echo` - Echo endpoint for testing (POST only)
-- These bypass TanStack Start for maximum performance
+- These routes bypass TanStack Start via the direct handler system
+- Defined using `createFileRoute()` with `server.handlers` for HTTP methods
+- Access Cloudflare env via `import { env } from "cloudflare:workers"`
+- Use `json()` helper from `@tanstack/react-start` for responses
+
+**API Routes** (`src/routes/api/`): Standard API endpoints through TanStack Start:
+- `/api/status` - Status endpoint (example route through framework)
+- These routes go through TanStack Start's full routing layer
+- Use for routes that need framework features (middleware, context, etc.)
 
 **Server Functions Pattern**: TanStack Start server functions use a composable middleware pattern:
 1. Create middleware with `createMiddleware()` in `src/core/middleware/`
